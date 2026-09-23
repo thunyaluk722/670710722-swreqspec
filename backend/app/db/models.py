@@ -9,6 +9,7 @@ Base = declarative_base()
 
 
 class Slot(Base):
+    # รองรับ FR-BKG-01 และ FR-BKG-04 ด้วยข้อมูลช่วงเวลาและที่นั่งคงเหลือ
     __tablename__ = 'slots'
 
     id = Column(Integer, primary_key=True, index=True)
@@ -22,13 +23,14 @@ class Slot(Base):
 
 
 class Booking(Base):
+    # รองรับ FR-BKG-02, FR-BKG-04 และ IF-HIS-01 โดยอ้างอิงผู้รับบริการด้วย HN
     __tablename__ = 'bookings'
 
     id = Column(Integer, primary_key=True, index=True)
     hn = Column(String, nullable=False, index=True)
     slot_id = Column(Integer, ForeignKey('slots.id'), nullable=False)
     booking_date = Column(Date, nullable=False)
-    queue_no = Column(String, nullable=False)
+    queue_no = Column(String, nullable=True)
     status = Column(String, nullable=False, default='confirmed')
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
@@ -36,6 +38,7 @@ class Booking(Base):
 
 
 class AuditLog(Base):
+    # รองรับ DOM-PDPA-01 ด้วยข้อมูลผู้เข้าถึง เวลา และรหัสผู้รับบริการ
     __tablename__ = 'audit_logs'
 
     id = Column(Integer, primary_key=True, index=True)

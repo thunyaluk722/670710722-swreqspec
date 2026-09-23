@@ -24,3 +24,12 @@
 - ผลลัพธ์: สร้าง `specs/001-booking/tasks.md` จำนวน 15 task เรียงตามการพึ่งพา พร้อมตารางตรวจ AC และ Constraint ครบถ้วน
 - การตัดสินใจ: คง Q-02 เป็น Open Question และทำเครื่องหมาย task ที่เกี่ยวกับการออกหรือแสดงหมายเลขคิวเป็น `รอ Q-02` โดยไม่เดาคำตอบ
 - การทดสอบที่ระบุ: AC-BKG-01 ถึง AC-BKG-06 ถูกผูกกับ task ครบทุกตัว รวมถึง NFR-PERF-01, NFR-SEC-01 และ NFR-USE-01
+
+---
+
+## 2569-09-23 คำสั่ง: /implement T-01 specs/001-booking/tasks.md
+
+- ไฟล์ที่สร้างหรือแก้: `backend/app/db/models.py`, `backend/app/db/session.py`, `backend/app/db/migrations/001_init.py`, `backend/app/db/migrations/__init__.py`, `backend/tests/conftest.py`
+- ผลลัพธ์: เพิ่ม schema สำหรับ `slots`, `bookings` และ `audit_logs`; ตาราง `bookings` อ้างอิงผู้รับบริการด้วย HN และไม่มีเลขบัตรประชาชน; `queue_no` เว้นว่างได้จนกว่า Q-02 จะมีคำตอบ
+- ผล test: `cd backend && pytest` ผ่าน 4 tests
+- สิ่งที่เกือบต้องเดา: ไม่ได้เดารูปแบบหมายเลขคิว เนื่องจากยังติด Q-02; คงฟิลด์ `queue_no` ให้ nullable ตาม plan.md

@@ -22,10 +22,12 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, futu
 
 
 def init_db() -> None:
+    # รองรับ CON-TECH-01 ด้วยการสร้าง schema ผ่าน engine ที่ตั้งค่าไว้
     Base.metadata.create_all(bind=engine)
 
 
 def get_db():
+    # รองรับ CON-TECH-01 โดยจัดการ session ฐานข้อมูลต่อ request
     db = SessionLocal()
     try:
         yield db
