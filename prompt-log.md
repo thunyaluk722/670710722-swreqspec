@@ -90,3 +90,14 @@
 - RTM: เพิ่ม specs/001-booking/rtm.md; ตามรอย requirement 15 แถว: ครบ 0, ยังไม่ถึง 8, รอ Q-xx 0, ช่องโหว่ 7
 - ข้อค้นพบใหม่: F-01 ถึง F-09
 - ไม่แก้โค้ด, test, spec, plan หรือ tasks
+
+---
+
+## 2569-10-07 08:55 คำสั่ง: /verify specs/001-booking/
+
+- ผล test: backend ผ่าน 7 tests ไม่ผ่าน 0; frontend ผ่าน 3 tests ไม่ผ่าน 0; มี StarletteDeprecationWarning และ React act warning
+- UI-BKG-02: ConfirmBooking แสดงข้อความ “ช่วงเวลาเต็ม” และได้สูงสุด 3 ตัวเลือกตาม spec; เอาปุ่มยกเลิกออกแล้ว
+- RTM: อัปเดต specs/001-booking/rtm.md; ตามรอย 15 แถว: ครบ 0, ยังไม่ถึง 7, รอ Q-xx 0, ช่องโหว่ 8
+- F-ID เดิม F-01 ถึง F-09 คงเดิม; เพิ่ม F-10 (test AC-BKG-03 ไม่ตรวจความใกล้ที่สุด/ไม่มี booking ซ้อน) และ F-11 (SlotPicker ไม่ตรงข้อความ UI และไม่แสดงวันของแต่ละช่วง)
+- F-04 ยังเปิด: ปุ่มถูกนำออกจาก ConfirmBooking แล้ว แต่ endpoint/service และ API client wrapper สำหรับยกเลิกยังอยู่
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks
