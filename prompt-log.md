@@ -53,3 +53,30 @@
 - TC ID ที่เสนอ: TC-BKG-01-1, TC-BKG-01-2, TC-BKG-01-3
 - ผล: เพิ่มแถวสถานะ "ร่าง" ใน specs/001-booking/test-cases.md แล้วหยุด ไม่เขียนโค้ด test
 - หมายเหตุ: Then ที่เกี่ยวกับหมายเลขคิวมีคำว่า "(รอ Q-02)" เพราะ spec ยังไม่มีรูปแบบเลขคิวที่ชัดเจน
+
+---
+
+## 2569-10-07 08.26 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/
+
+- โหมด: เขียน test (มีแถวสถานะ "ใช้ได้" ใน specs/001-booking/test-cases.md)
+- TC ID ที่เขียน: TC-BKG-01-1, TC-BKG-01-2, TC-BKG-01-3
+- ไฟล์โค้ด test: backend/tests/test_AC_BKG_01.py
+- ผล test: 3 passed
+- สรุป: ทุกกรณีใน AC-BKG-01 ตรงตามแถวในตาราง และไม่มีบั๊กจากการเขียน test
+
+---
+
+## 2569-10-07 08:25 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/backend/tests/test_AC_BKG_01.py
+
+- โหมด: เขียน test
+- AC: AC-BKG-01
+- พร้อมใช้งานใน test-cases.md: 3 แถวสถานะ "ใช้ได้"
+- ผล: เขียน test 3 ตัวใน backend/tests/test_AC_BKG_01.py และรัน pytest
+- ผลลัพธ์: รันทีละไฟล์โดย `cd backend && pytest tests/test_AC_BKG_01.py -q`
+
+---
+
+## 2569-10-07 08:28 คำสั่ง: คืน test_AC_BKG_01 เดิมกลับมา
+
+- ผล: คืนฟังก์ชัน `test_AC_BKG_01` เดิมใน `backend/tests/test_AC_BKG_01.py` โดยคง test ใหม่ TC-BKG-01-1 ถึง TC-BKG-01-3 ไว้ครบ
+- ผล test: `cd backend && pytest -v` ผ่าน 7 tests
