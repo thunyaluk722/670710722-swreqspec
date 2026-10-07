@@ -1,36 +1,21 @@
-from __future__ import annotations
+# สร้าง FastAPI app และรวม router (T-02, T-03)
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
-from app.audit.middleware import audit_middleware
 from app.booking.router import router as booking_router
-from app.db.session import init_db
-from app.slots.router import router as slot_router
-from app.slots.service import seed_slots
-from app.db.session import SessionLocal
-
-app = FastAPI(title='Booking service')
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['*'],
-    allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
+from app.db.models import Base
+from app.db.session import engine
+from app.slots.router import router as slots_router
 
 
-@app.on_event('startup')
-def startup() -> None:
-    """Initialize PostgreSQL-compatible schema and seed the default slot horizon."""
-    init_db()
-    db = SessionLocal()
-    try:
-        seed_slots(db)
-    finally:
-        db.close()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """สร้างตารางเมื่อเปิดหลังบ้าน (ใช้ migration 001_init แบบย่อ)"""
+    Base.metadata.create_all(engine)
+    yield
 
 
-app.middleware('http')(audit_middleware)
-app.include_router(slot_router)
+app = FastAPI(title="จองคิวตรวจสุขภาพ", lifespan=lifespan)
+app.include_router(slots_router)
 app.include_router(booking_router)

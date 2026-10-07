@@ -1,38 +1,41 @@
-from __future__ import annotations
+# API จองคิว POST /bookings (T-03)
+# รองรับ FR-BKG-04, IF-IDP-01
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from app.booking.service import create_booking, find_booking
+from app.auth.idp import get_verified_hn
+from app.booking import service
 from app.db.session import get_db
 
-router = APIRouter(prefix='')
+logger = logging.getLogger("booking")
+router = APIRouter()
 
 
 class BookingRequest(BaseModel):
-    hn: str
     slot_id: int
+    national_id: str | None = None  # เผื่อใช้ค้น HN จาก HIS
 
 
-@router.post('/bookings')
-def create_booking_route(payload: BookingRequest, db: Session = Depends(get_db)):
-    """FR-BKG-04: reserve a slot and return a queue number immediately."""
-    result = create_booking(db, payload.hn, payload.slot_id)
-    if result['status'] in {'duplicate', 'full'}:
-        raise HTTPException(status_code=409, detail=result)
-    return result
+@router.post("/bookings", status_code=201)
+def create_booking(req: BookingRequest, hn: str = Depends(get_verified_hn), db: Session = Depends(get_db)):
+    """ยืนยันการจอง แล้วคืนหมายเลขคิว (FR-BKG-04)"""
+    logger.info("booking request slot=%s hn=%s national_id=%s", req.slot_id, hn, req.national_id)
+    try:
+        booking = service.create_booking(db, hn=hn, slot_id=req.slot_id)
+    except service.SlotFullError:
+        raise HTTPException(status_code=409, detail="ช่วงเวลาเต็ม")
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return {"booking_id": booking.id, "slot_id": booking.slot_id, "queue_no": booking.queue_no}
 
 
-@router.get('/bookings/{booking_id}')
-def get_booking_route(booking_id: int, db: Session = Depends(get_db)):
-    """DOM-PDPA-01: read-only detail route for a specific booking record."""
-    booking = find_booking(db, booking_id)
-    return {
-        'booking_id': booking.id,
-        'hn': booking.hn,
-        'queue_no': booking.queue_no,
-        'slot_id': booking.slot_id,
-        'booking_date': booking.booking_date.isoformat(),
-        'status': booking.status,
-    }
+@router.delete("/bookings/{booking_id}", status_code=204)
+def cancel_booking(booking_id: int, hn: str = Depends(get_verified_hn), db: Session = Depends(get_db)):
+    """ยกเลิกการจอง เผื่อผู้ใช้กดจองผิด (FR-BKG-04)"""
+    try:
+        service.cancel_booking(db, booking_id, hn)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
