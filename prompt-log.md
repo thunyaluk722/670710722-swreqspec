@@ -80,3 +80,13 @@
 
 - ผล: คืนฟังก์ชัน `test_AC_BKG_01` เดิมใน `backend/tests/test_AC_BKG_01.py` โดยคง test ใหม่ TC-BKG-01-1 ถึง TC-BKG-01-3 ไว้ครบ
 - ผล test: `cd backend && pytest -v` ผ่าน 7 tests
+
+---
+
+## 2569-10-07 08:31 คำสั่ง: /verify specs/001-booking/
+
+- ผล test: `cd backend && pytest -v` ผ่าน 7 tests ไม่ผ่าน 0; มี StarletteDeprecationWarning 1 รายการ
+- หน้าจอ: พบเฉพาะ setup test ไม่มี test หน้าจอ feature จึงไม่ได้รัน npm test
+- RTM: เพิ่ม specs/001-booking/rtm.md; ตามรอย requirement 15 แถว: ครบ 0, ยังไม่ถึง 8, รอ Q-xx 0, ช่องโหว่ 7
+- ข้อค้นพบใหม่: F-01 ถึง F-09
+- ไม่แก้โค้ด, test, spec, plan หรือ tasks
